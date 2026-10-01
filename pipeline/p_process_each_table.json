@@ -403,7 +403,7 @@
 											"parameters": {
 												"target_container": "landing",
 												"target_folder": {
-													"value": "@concat(activity('Read_table_details').output.firstRow.source_system,'/',activity('Read_table_details').output.firstRow.source_table_name)",
+													"value": "@concat(activity('Read_table_details').output.firstRow.source_system,'/',activity('Read_table_details').output.firstRow.source_table_name,'/',variables('CurrentTime'))",
 													"type": "Expression"
 												}
 											}
