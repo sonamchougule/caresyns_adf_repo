@@ -355,8 +355,7 @@
 											"type": "BinarySource",
 											"storeSettings": {
 												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"deleteFilesAfterCompletion": false
+												"recursive": true
 											},
 											"formatSettings": {
 												"type": "BinaryReadSettings"
@@ -377,7 +376,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "adls_binary_dataset",
+											"referenceName": "Binary2",
 											"type": "DatasetReference"
 										}
 									],
