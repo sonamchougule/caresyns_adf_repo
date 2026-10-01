@@ -1,5 +1,5 @@
 {
-	"name": "p_process_each_table",
+	"name": "P_source_to_silver_inner",
 	"properties": {
 		"activities": [
 			{

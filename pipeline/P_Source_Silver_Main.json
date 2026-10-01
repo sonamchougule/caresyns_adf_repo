@@ -1,5 +1,5 @@
 {
-	"name": "P_Source_Silver",
+	"name": "P_Source_Silver_Main",
 	"properties": {
 		"activities": [
 			{
@@ -67,7 +67,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "p_process_each_table",
+									"referenceName": "P_source_to_silver_inner",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
