@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-caresync23"
+		},
+		"ADLSLinkedService_properties_typeProperties_url": {
+			"value": "https://adfcaresyncstorage.dfs.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://key-caresync23.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "caresync-server23.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "caresync-db"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "sonamchougule"
+		},
+		"PostgreSqllinkedservice_properties_typeProperties_server": {
+			"value": "ep-purple-cake-b2mom7ig-pooler.c-6.eu-central-1.aws.neon.tech"
+		},
+		"PostgreSqllinkedservice_properties_typeProperties_database": {
+			"value": "neondb"
+		},
+		"PostgreSqllinkedservice_properties_typeProperties_username": {
+			"value": "neondb_owner"
+		},
+		"datarbricksLinkedservice_properties_typeProperties_existingClusterId": {
+			"value": "1001-104201-aursw6bl"
+		}
+	}
+}
