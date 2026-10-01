@@ -248,7 +248,7 @@
 							"typeProperties": {
 								"variableName": "watermark_val",
 								"value": {
-									"value": "@activity('Read Watermark Column').output.firstRow.watermark_column",
+									"value": "@activity('Read Watermark Column').output.firstRow.watermark_value",
 									"type": "Expression"
 								}
 							}
