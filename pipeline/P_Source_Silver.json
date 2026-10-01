@@ -48,6 +48,7 @@
 						"value": "@activity('Read_Tables_for_Ingestion').output.value",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Source to silver pipeline",
@@ -153,10 +154,12 @@
 		],
 		"parameters": {
 			"Source_system": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "neon_postgres"
 			},
 			"adf_run_id": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "a1"
 			}
 		},
 		"variables": {
