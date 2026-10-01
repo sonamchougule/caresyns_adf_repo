@@ -30,11 +30,52 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "IterateThroughEachtable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Read_Tables_for_Ingestion",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Read_Tables_for_Ingestion').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "CurrentDateTime",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Current Date Time",
+					"value": {
+						"value": "@formatDateTime(utcNow(),'yyyy-MM-ddThh:mm:ss')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
 			"Source_system": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"Current Date Time": {
+				"type": "String"
 			}
 		},
 		"annotations": []
