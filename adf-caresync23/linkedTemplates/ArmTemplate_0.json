@@ -309,7 +309,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/p_process_each_table')]",
+			"name": "[concat(parameters('factoryName'), '/P_source_to_silver_inner')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -395,7 +395,7 @@
 									"type": "Expression"
 								},
 								"source_file_format": {
-									"value": "@activity('Read_table_details').output.firstRow.source_file_format",
+									"value": "@coalesce(activity('Read_table_details').output.firstRow.source_file_format,'')",
 									"type": "Expression"
 								}
 							}
@@ -440,7 +440,11 @@
 									"type": "Expression"
 								},
 								"merge_keys": {
-									"value": "@activity('Read_table_details').output.firstRow.merge_keys",
+									"value": "@coalesce(activity('Read_table_details').output.firstRow.merge_keys,'')",
+									"type": "Expression"
+								},
+								"watermark_col": {
+									"value": "@coalesce(activity('Read_table_details').output.firstRow.watermark_column)",
 									"type": "Expression"
 								}
 							}
@@ -478,7 +482,7 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "update ctrl.audit_log\nset status='SUCCESS',end_time=SYSUTCDATETIME(),records_written=@{activity('bronze to silver').output.runOutput}\nwhere adf_run_id='@{pipeline().parameters.adf_run_id}' and table_id=pipeline().parameters.table_id",
+										"value": "UPDATE ctrl.audit_log\nSET\n    status = 'SUCCESS',\n    end_time = SYSUTCDATETIME(),\n    records_written = @{activity('bronze to silver').output.runOutput.record_count}\nWHERE adf_run_id = '@{pipeline().parameters.adf_run_id}'\n  AND table_id = @{pipeline().parameters.table_id};\n\nUPDATE ctrl.watermark\nSET\n    watermark_value = '@{activity('bronze to silver').output.runOutput.max_date}',\n    last_updated_timestamp = SYSUTCDATETIME()\nWHERE table_id = @{pipeline().parameters.table_id};",
 										"type": "Expression"
 									}
 								}
@@ -526,7 +530,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "select watermark_value from ctrl.table_config where table_id=@{pipeline().parameters.table_id}",
+												"value": "select watermark_value from ctrl.watermark where table_id=@{pipeline().parameters.table_id}",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -558,7 +562,7 @@
 									"typeProperties": {
 										"variableName": "watermark_val",
 										"value": {
-											"value": "@activity('Read Watermark Column').output.firstRow.watermark_column",
+											"value": "@activity('Read Watermark Column').output.firstRow.watermark_value",
 											"type": "Expression"
 										}
 									}
@@ -748,7 +752,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/P_Source_Silver')]",
+			"name": "[concat(parameters('factoryName'), '/P_Source_Silver_Main')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -819,7 +823,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "p_process_each_table",
+											"referenceName": "P_source_to_silver_inner",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -929,7 +933,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQLDBdataset')]",
-				"[concat(variables('factoryId'), '/pipelines/p_process_each_table')]",
+				"[concat(variables('factoryId'), '/pipelines/P_source_to_silver_inner')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		}
