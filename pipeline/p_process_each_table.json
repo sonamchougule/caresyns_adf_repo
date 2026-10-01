@@ -115,7 +115,7 @@
 				"typeProperties": {
 					"variableName": "CurrentTime",
 					"value": {
-						"value": "@formatDateTime(utcNow(),'yyyy-MM-ddThh:mm:ss')",
+						"value": "@formatDateTime(utcNow(),'yyyy-MM-dd_hh:mm:ss')",
 						"type": "Expression"
 					}
 				}
