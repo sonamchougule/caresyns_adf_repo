@@ -169,7 +169,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "update ctrl.audit_log\nset status='SUCCESS',end_time=SYSUTCDATETIME(),records_written=@{json(activity('bronze to silver').output.runOutput).record_count}\nwhere adf_run_id='@{pipeline().parameters.adf_run_id}' and table_id=pipeline().parameters.table_id\n\nupdate ctrl.watermark\nset watermark_value=@{json(activity('bronze to silver').output.runOutput).max_date},last_updated_timestamp=SYSUTCDATETIME()\nwhere table_id=pipeline().parameters.table_id",
+								"value": "update ctrl.audit_log\nset status='SUCCESS',end_time=SYSUTCDATETIME(),records_written=@{json(activity('bronze to silver').output.runOutput).record_count}\nwhere adf_run_id='@{pipeline().parameters.adf_run_id}' and table_id=pipeline().parameters.table_id;\n\nupdate ctrl.watermark\nset watermark_value='@{json(activity('bronze to silver').output.runOutput).max_date}',last_updated_timestamp=SYSUTCDATETIME()\nwhere table_id=pipeline().parameters.table_id",
 								"type": "Expression"
 							}
 						}
