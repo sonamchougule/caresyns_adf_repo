@@ -82,7 +82,7 @@
 							"type": "Expression"
 						},
 						"source_file_format": {
-							"value": "@activity('Read_table_details').output.firstRow.source_file_format",
+							"value": "@coalesce(activity('Read_table_details').output.firstRow.source_file_format,'')",
 							"type": "Expression"
 						}
 					}
@@ -127,7 +127,7 @@
 							"type": "Expression"
 						},
 						"merge_keys": {
-							"value": "@activity('Read_table_details').output.firstRow.merge_keys",
+							"value": "@coalesce(activity('Read_table_details').output.firstRow.merge_keys,'')",
 							"type": "Expression"
 						}
 					}
