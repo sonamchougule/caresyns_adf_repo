@@ -339,7 +339,7 @@
 							"value": "adls_csv",
 							"activities": [
 								{
-									"name": "Copy data1",
+									"name": "CopyCSVtoADLS",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -362,34 +362,36 @@
 											}
 										},
 										"sink": {
-											"type": "DelimitedTextSink",
+											"type": "BinarySink",
 											"storeSettings": {
 												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
 											}
 										},
 										"enableStaging": false
 									},
 									"inputs": [
 										{
-											"referenceName": "Binary2",
-											"type": "DatasetReference"
+											"referenceName": "adls_binaryd_dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder": {
+													"value": "@activity('Read_table_details').output.firstRow.source_path",
+													"type": "Expression"
+												},
+												"container": "source"
+											}
 										}
 									],
 									"outputs": [
 										{
-											"referenceName": "adls_csv_sinkdataset",
+											"referenceName": "adls_binaryd_dataset",
 											"type": "DatasetReference",
 											"parameters": {
-												"target_container": "landing",
-												"target_folder": {
+												"folder": {
 													"value": "@concat(activity('Read_table_details').output.firstRow.source_system,'/',activity('Read_table_details').output.firstRow.source_table_name,'/',variables('CurrentTime'))",
 													"type": "Expression"
-												}
+												},
+												"container": "landing"
 											}
 										}
 									]
