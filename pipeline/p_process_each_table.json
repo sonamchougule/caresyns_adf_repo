@@ -217,7 +217,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select watermark_value from ctrl.table_config where table_id=@{pipeline().parameters.table_id}",
+										"value": "select watermark_value from ctrl.watermark where table_id=@{pipeline().parameters.table_id}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
