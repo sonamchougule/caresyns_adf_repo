@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from ctrl.table_config where is_active=1 and source_system='@{pipeline().parameters.Source_system}'",
+							"value": "select table_id,gold_table_name from ctrl.table_config where is_active=1 and stage='SILVER_TO_GOLD'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -50,39 +50,6 @@
 					},
 					"isSequential": false,
 					"activities": [
-						{
-							"name": "Source to silver pipeline",
-							"type": "ExecutePipeline",
-							"dependsOn": [
-								{
-									"activity": "Insert In progress status",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "P_source_to_silver_inner",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"table_id": {
-										"value": "@item().table_id",
-										"type": "Expression"
-									},
-									"adf_run_id": {
-										"value": "@pipeline().parameters.adf_run_id",
-										"type": "Expression"
-									}
-								}
-							}
-						},
 						{
 							"name": "Insert In progress status",
 							"type": "Script",
@@ -117,9 +84,9 @@
 							"type": "Script",
 							"dependsOn": [
 								{
-									"activity": "Source to silver pipeline",
+									"activity": "Ingest_All_Tables_copy1",
 									"dependencyConditions": [
-										"Failed"
+										"Succeeded"
 									]
 								}
 							],
@@ -147,16 +114,132 @@
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
 							}
+						},
+						{
+							"name": "Ingest_All_Tables_copy1",
+							"type": "ForEach",
+							"dependsOn": [
+								{
+									"activity": "Insert In progress status",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Read_Tables_for_Ingestion').output.value",
+									"type": "Expression"
+								},
+								"isSequential": false,
+								"activities": [
+									{
+										"name": "Insert In progress status_copy1",
+										"type": "Script",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabase1",
+											"type": "LinkedServiceReference"
+										},
+										"typeProperties": {
+											"scripts": [
+												{
+													"type": "Query",
+													"text": {
+														"value": "insert into ctrl.audit_log(adf_run_id,table_id,stage,status,start_time) values ('@{pipeline().parameters.adf_run_id}',@{item().table_id},'source_to_silver','IN_PROGRESS',SYSUTCDATETIME())",
+														"type": "Expression"
+													}
+												}
+											],
+											"scriptBlockExecutionTimeout": "02:00:00"
+										}
+									},
+									{
+										"name": "Update suceess status_copy1",
+										"type": "Script",
+										"dependsOn": [
+											{
+												"activity": "Execute Source_Silver pipeline",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabase1",
+											"type": "LinkedServiceReference"
+										},
+										"typeProperties": {
+											"scripts": [
+												{
+													"type": "Query",
+													"text": {
+														"value": "UPDATE ctrl.audit_log\nSET\n    status = 'SUCCESS',\n    end_time = SYSUTCDATETIME(),\n    records_written = @{activity('Loading Gold tables').output.runOutput.record_count}\nWHERE adf_run_id = '@{pipeline().parameters.adf_run_id}'\n  AND table_id =@{item().table_id}\n\n",
+														"type": "Expression"
+													}
+												}
+											],
+											"scriptBlockExecutionTimeout": "02:00:00"
+										}
+									},
+									{
+										"name": "Execute Source_Silver pipeline",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "Insert In progress status_copy1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "P_source_to_silver_inner",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"table_id": {
+													"value": "@{item().table_id}",
+													"type": "Expression"
+												},
+												"adf_run_id": {
+													"value": "@pipeline().parameters.adf_run_id",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
 						}
 					]
 				}
 			}
 		],
 		"parameters": {
-			"Source_system": {
-				"type": "string",
-				"defaultValue": "neon_postgres"
-			},
 			"adf_run_id": {
 				"type": "string",
 				"defaultValue": "a1"
