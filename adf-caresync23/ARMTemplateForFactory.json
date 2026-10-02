@@ -210,8 +210,7 @@
 				},
 				"parameters": {
 					"adf_run_id": {
-						"type": "string",
-						"defaultValue": "a1"
+						"type": "string"
 					},
 					"Source_System": {
 						"type": "string"
@@ -1241,11 +1240,6 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"adf_run_id": {
-						"type": "string"
-					}
 				},
 				"annotations": []
 			},
