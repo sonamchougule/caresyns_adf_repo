@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Read_Tables_for_Ingestion",
+				"name": "Read Gold tables",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from ctrl.table_config where is_active=1 and source_system='@{pipeline().parameters.Source_system}'",
+							"value": "select * from ctrl.table_config where is_active=1 and stage='SILVER_TO_GOLD'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -36,7 +36,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Read_Tables_for_Ingestion",
+						"activity": "Read Gold tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Read_Tables_for_Ingestion').output.value",
+						"value": "@activity('Read Gold tables').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -186,10 +186,6 @@
 			}
 		],
 		"parameters": {
-			"Source_system": {
-				"type": "string",
-				"defaultValue": "neon_postgres"
-			},
 			"adf_run_id": {
 				"type": "string",
 				"defaultValue": "a1"
