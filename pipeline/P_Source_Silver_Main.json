@@ -34,8 +34,6 @@
 			{
 				"name": "Ingest_All_Tables",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Read_Tables_for_Ingestion",
