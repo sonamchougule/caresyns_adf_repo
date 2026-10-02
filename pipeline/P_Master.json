@@ -21,7 +21,7 @@
 							"value": "@pipeline().RunId",
 							"type": "Expression"
 						},
-						"Source_System": "neon_postgres"
+						"Source_System": "'neon_postgres'"
 					}
 				}
 			},
@@ -44,7 +44,7 @@
 							"value": "@pipeline().RunId",
 							"type": "Expression"
 						},
-						"Source_System": "adls_csv"
+						"Source_System": "'adls_csv'"
 					}
 				}
 			},
