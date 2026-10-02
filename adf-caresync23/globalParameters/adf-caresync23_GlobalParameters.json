@@ -1,1 +1,14 @@
-{}
+{
+	"email_receipient": {
+		"type": "string",
+		"value": "namsc23@gmail.com"
+	},
+	"env": {
+		"type": "string",
+		"value": "DEV"
+	},
+	"logic_appls_url": {
+		"type": "string",
+		"value": "https://prod-23.germanywestcentral.logic.azure.com:443/workflows/a7f925ea1cc446dc94483f0c9a4b5647/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=QYpP3kEJGWhR6iVekV1IyD9CY-ibYh0bteelRIJzBUU"
+	}
+}
