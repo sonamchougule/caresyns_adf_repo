@@ -429,8 +429,6 @@
 					{
 						"name": "Ingest_All_Tables",
 						"type": "ForEach",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Read_Tables_for_Ingestion",
@@ -1435,7 +1433,7 @@
 						"typeProperties": {
 							"variableName": "logic_apps_body",
 							"value": {
-								"value": "{\n    \"Subject\" :\"@{variables('email_subject')}\",\n    \"Email_Receipeint\":\"@{pipeline().globalParameters.email_receipient}\",\n    \"body_header\":\"@{variables('body_header')}\"\n    \"body_footer\":\"@{variables('body_footer')}\"\n    status_table:activity('read all table status').output.value\n\n}",
+								"value": "{\n    \"Subject\" :\"@{variables('email_subject')}\",\n    \"Email_Receipeint\":\"@{pipeline().globalParameters.email_receipient}\",\n    \"body_header\":\"@{variables('body_header')}\",\n    \"body_footer\":\"@{variables('body_footer')}\",\n    status_table:activity('read all table status').output.value\n\n}",
 								"type": "Expression"
 							}
 						}
