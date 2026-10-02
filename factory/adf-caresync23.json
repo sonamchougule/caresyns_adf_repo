@@ -1,0 +1,12 @@
+{
+	"name": "adf-caresync23",
+	"properties": {
+		"globalParameters": {
+			"email_receipient": {
+				"type": "string",
+				"value": "namsc23@gmail.com"
+			}
+		}
+	},
+	"location": "germanywestcentral"
+}
